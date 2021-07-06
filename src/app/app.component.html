@@ -1,7 +1,77 @@
 <div class="container">
 	<h1>Prueba técnica - Estudio Faser</h1>
 	<h2>Listado de tareas</h2>
-	<ol>
-		<li *ngFor="let tarea of tareas">{{tarea.titulo}} ({{tarea.minutos}} minutos)</li>
-	</ol>
+	<button (click)="onOrder(tareas)">
+		Ordenar
+	</button>
+	<!-- Apartado para crear nueva tarea -->
+	<div>
+		<!--Formulario de Ajustes-->
+		<form #taskNew="ngForm" (ngSubmit)="onSubmit(taskNew)">
+			<div class="form-group">
+				<label for="id">ID</label>
+				<input type="number" name="id" #id="ngModel" [(ngModel)]="tarea.id" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="titulo">Titulo</label>
+				<input type="text" name="titulo" #titulo="ngModel" [(ngModel)]="tarea.titulo" class="form-control"
+					required />
+			</div>
+			<div class="form-group">
+				<label for="minutos">Minutos</label>
+				<input type="number" name="minutos" #minutos="ngModel" [(ngModel)]="tarea.minutos" class="form-control"
+					required />
+			</div>
+			<input type="submit" value="Guardar" class="btn btn-success" [disabled]="taskNew.invalid" />
+		</form>
+	</div>
+	<!-- Apartado para crear nueva tarea -->
+
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Titulo</th>
+				<th scope="col">Tiempo</th>
+				<th scope="col">Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let tarea of tareas">
+				<ng-container *ngIf="tarea.favorite; else elseTemplate">
+					<th scope="row" style="background-color: aqua;">{{ tarea.id }}</th>
+					<td style="background-color: aqua;">{{ tarea.titulo }}</td>
+					<td style="background-color: aqua;">({{ tarea.minutos }} minutos)</td>
+					<td style="background-color: aqua;">
+						<form #taskDelete="ngForm" (ngSubmit)="onDelete(taskDelete)">
+							<input type="hidden" name="id" #id="ngModel" [(ngModel)]="tarea.id" />
+							<input type="submit" value="Eliminar" class="btn btn-danger"
+								[disabled]="taskDelete.invalid" />
+						</form>
+
+						<button (click)="onFavorite(tarea)">
+							Destacado
+						</button>
+					</td>
+				</ng-container>
+				<ng-template #elseTemplate>
+					<th scope="row">{{ tarea.id }}</th>
+					<td>{{ tarea.titulo }}</td>
+					<td>({{ tarea.minutos }} minutos)</td>
+					<td>
+						<form #taskDelete="ngForm" (ngSubmit)="onDelete(taskDelete)">
+							<input type="hidden" name="id" #id="ngModel" [(ngModel)]="tarea.id" />
+							<input type="submit" value="Eliminar" class="btn btn-danger"
+								[disabled]="taskDelete.invalid" />
+						</form>
+
+						<button (click)="onFavorite(tarea)">
+							Destacado
+						</button>
+					</td>
+				</ng-template>
+			</tr>
+		</tbody>
+	</table>
 </div>
